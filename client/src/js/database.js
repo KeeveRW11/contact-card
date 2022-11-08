@@ -1,6 +1,7 @@
 import { openDB } from 'idb';
 import 'regenerator-runtime/runtime';
 
+
 //init database
 export const initDb = async () =>
     openDB('contact_db', 1, {
@@ -34,6 +35,7 @@ export const getDb = async () => {
   console.log('result.value', result);
   return result;
 };
+
 // Export a function we will use to POST to the database.
 export const postDb = async (name, email, phone, profile)  => {
   console.log('Post to the database');
@@ -54,3 +56,36 @@ export const postDb = async (name, email, phone, profile)  => {
   const result = await request;
   console.log('🚀 - data saved to the database', result);
 };
+
+
+export const deleteDB = async (id) => {
+    console.log('DELETE from the database', id);
+
+    const contactDb = await openDB('contact_db', 1);
+
+    const tx = contactDb.transaction('contacts', 'readwrite');
+
+    const store = tx.objectStore('contacts');
+
+    // Use the .delete() method to get all data in the database.
+    const request = store.delete(id);
+
+    const result = await request;
+    console.log('result.value', result);
+    return result?.value;
+};
+
+export const editDb = async (id, name, email, phone, profile) => {
+    console.log('PUT to the database');
+
+    const contactDb = await openDB('contactDb', 1);
+
+    const tx = contactDb.transaction('contacts', 'readwrite');
+
+    const store = tx.objectStore('contacts');
+
+    const request = store.put({ id: id, name: name, email: email, phone: phone, profile: profile});
+    const result = await request;
+    console.log('🚀 - data saved to the database', result);
+
+}

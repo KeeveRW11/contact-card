@@ -1,10 +1,10 @@
 //Import functions
-import { initDb, getDb, postDb, } from "./database";
+import { initDb, postDb, deleteDB, editDb } from "./database";
 import { fetchCards } from "./cards"
 import { toggleForm, clearForm } from "./form";
 
 //This imports the javascript modules
-import "./form";
+// import "./form";
 // import "./submit";
 
 //This imports the CSS
@@ -20,11 +20,12 @@ import Bear from '../images/bear.png';
 import Dog from '../images/dog.png';
 
 
+
 window.addEventListener('load', function () {
     initDb();
     fetchCards();
-    getDb();
-    postDb("Lernantino", "learnantino@test.com", 8186601234, "Bear");
+    // getDb();
+    // postDb("Lernantino", "learnantino@test.com", 8186601234, "Bear");
     document.getElementById('logo').src = Logo;
     document.getElementById('bearThumbnail').src = Bear;
     document.getElementById('dogThumbnail').src = Dog;
@@ -52,6 +53,12 @@ form.addEventListener('submit', event => {
   if (submitBtnToUpdate == false) {
     postDb(name, email, phone, profile);
   } else {
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let email = document.getElementById("email").value;
+    let profile = document.querySelector('input[type="radio"]:checked').value;
+
+    editDb(profileId, name, email, phone, profile);
   
     fetchCards();
       // Toggles the submit button back to POST functionality
@@ -65,3 +72,31 @@ form.addEventListener('submit', event => {
   // Reload the DOM
   fetchCards();
 });
+
+window.deleteCard = (e) => {
+    let id = parseInt(e.id);   
+    deleteDB(id);
+
+    fetchCards();
+
+};
+
+window.editCard = (e) => {
+
+    profileId = parseInt(e.dataset.id);
+
+    let editName = e.dataset.name;
+    let editEmail = e.dataset.email;
+    let editPhone = e.dataset.phone;
+
+    document.getElementById("name").value = editName;
+    document.getElementById("email").value = editEmail;
+    document.getElementById("phone").value = editPhone;
+    
+
+
+    // editDb(profileId, name, email, phone, profile);
+
+    form.style.display = "block";
+    submitBtnToUpdate = true;
+}
